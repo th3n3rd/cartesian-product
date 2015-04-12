@@ -85,7 +85,9 @@ class CartesianProduct implements Iterator
      */
     public function current()
     {
-        return $this->referenceSet->current();
+        $current = $this->referenceSet->current();
+
+        return !is_array($current) ? array($current) : $current;
     }
 
     /**

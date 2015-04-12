@@ -25,6 +25,16 @@ class CartesianProductTest extends PHPUnit_Framework_TestCase
         array('c', 'd')
     );
 
+    public function shouldBeAbleToHandleASingleSet()
+    {
+        $singleSet = array(array('a', 'b'));
+        $cartesianProduct = new CartesianProduct($singleSet);
+
+        $this->assertTrue(is_array($cartesianProduct->current()));
+        $cartesianProduct->next();
+        $this->assertTrue(is_array($cartesianProduct->current()));
+    }
+
     /**
      * @test
      */
