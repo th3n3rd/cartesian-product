@@ -1,4 +1,4 @@
-### Cartesian Product
+### Cartesian Product [![Build Status](https://travis-ci.org/th3n3rd/cartesian-product.svg)](https://travis-ci.org/th3n3rd/cartesian-product)
 
 This is a memory efficient Cartesian Product implementation.
 It uses iterators in order to store only a specific tuple at time being able to compute even large combinations
@@ -6,7 +6,7 @@ without affecting the memory footprint.
 
 ## Install
 
-The best way to install Tree is [through composer](http://getcomposer.org).
+The best way to install CartesianProduct is [through composer](http://getcomposer.org).
 
 Just create a composer.json file for your project:
 
