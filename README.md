@@ -1,7 +1,7 @@
 ### Cartesian Product
 
 This is a memory efficient Cartesian Product implementation.
-It uses iterators in order to store only a specific tuple at time being able to compute every large combinations
+It uses iterators in order to store only a specific tuple at time being able to compute even large combinations
 without affecting the memory footprint.
 
 ## Install
@@ -30,6 +30,41 @@ Then you can include the autoloader, and you will have access to the library cla
 ```php
 <?php
 require __DIR__ . '/vendor/autoload.php';
+```
+
+# Usage
+
+```php
+
+use Nerd\CartesianProduct\CartesianProduct;
+
+$cartesianProduct = new CartesianProduct();
+
+$cartesianProduct
+    ->appendSet(array('a', 'b', 'c'))
+    ->appendSet(array('d', 'e'))
+    ->appendSet(array('f', 'g', 'h'))
+    ->appendSet(array('i', 'j'))
+    ->appendSet(array('k', 'l'))
+    ->appendSet(array('m', 'n'))
+    ->appendSet(array('o'))
+    ->appendSet(array('p'))
+    ->appendSet(array('q', 'r', 's', 't'))
+    ->appendSet(array('u', 'v', 'w'))
+    ->appendSet(array('x', 'y'))
+    ->appendSet(array('z'))
+;
+
+foreach ($cartesianProduct as $index => $product) {
+    printf("[%s] (%s)\n", $index, implode(',', $product));
+}
+
+// or (not recommended)
+$result = $cartesianProduct->compute();
+
+foreach ($result as $index => $product) {
+    printf("[%s] (%s)\n", $index, implode(',', $product));
+}
 ```
 
 # Tests

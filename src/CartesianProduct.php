@@ -120,6 +120,7 @@ class CartesianProduct implements Iterator
      */
     public function rewind()
     {
+        $this->cursor = 0;
         $this->referenceSet->rewind();
     }
 

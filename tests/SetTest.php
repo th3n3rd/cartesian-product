@@ -43,23 +43,15 @@ class SetTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldReturnTheCurrentCursor()
-    {
-        $this->assertEquals(0, $this->set->key());
-        $this->set->next();
-        $this->assertEquals(1, $this->set->key());
-    }
-
-    /**
-     * @test
-     */
-    public function shouldMoveTheCursorToTheNextElement()
+    public function shouldAllowToMoveAndTrackTheCursor()
     {
         $this->assertEquals(0, $this->set->key());
         $this->set->next();
         $this->assertEquals(1, $this->set->key());
         $this->set->next();
         $this->assertEquals(2, $this->set->key());
+        $this->set->rewind();
+        $this->assertEquals(0, $this->set->key());
     }
 
     /**

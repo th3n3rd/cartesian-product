@@ -87,13 +87,23 @@ class LinkedSetTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldReturnTheCurrentCursor()
+    public function shouldAllowToMoveAndTrackTheCursor()
     {
         $set = $this->getSet();
+
+        $set->expects($this->exactly(1))
+            ->method('valid')
+            ->will($this->returnValue(false));
+
+        $set->expects($this->exactly(2))
+            ->method('rewind');
+
         $linkedSet = new LinkedSet($set, self::$values);
         $this->assertEquals(0, $linkedSet->key());
         $linkedSet->next();
         $this->assertEquals(1, $linkedSet->key());
+        $linkedSet->rewind();
+        $this->assertEquals(0, $linkedSet->key());
     }
 
     /**
@@ -108,20 +118,6 @@ class LinkedSetTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($linkedSet->valid());
         $linkedSet->next();
         $this->assertFalse($linkedSet->valid());
-    }
-
-    /**
-     * @test
-     */
-    public function shouldAllowToResetTheState()
-    {
-        $set = $this->getSet();
-        $linkedSet = new LinkedSet($set, self::$values);
-        $this->assertEquals(0, $linkedSet->key());
-        $linkedSet->next();
-        $this->assertEquals(1, $linkedSet->key());
-        $linkedSet->rewind();
-        $this->assertEquals(0, $linkedSet->key());
     }
 
     private function getSet()

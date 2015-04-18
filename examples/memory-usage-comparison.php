@@ -32,11 +32,24 @@ $cartesianProduct
 ;
 
 $bench->start();
-$wholeResult = $cartesianProduct->compute();
-foreach ($wholeResult as $index => $product) {
-    printf("[%s] (%s)\n", $index, implode(',', $product));
+foreach ($cartesianProduct as $index => $product) {
+    // nothing
 }
 $bench->end();
+$iteratorUseCaseBytes = $bench->getMemoryUsage(true);
+$iteratorUseCase = $bench->getMemoryUsage();
 
-printf("Time elapsed: %s\n", $bench->getTime());
-printf("Memory footprint: %s\n", $bench->getMemoryPeak());
+$bench->start();
+$wholeResult = $cartesianProduct->compute();
+foreach ($wholeResult as $index => $product) {
+    // nothing
+}
+$bench->end();
+$wholeUseCaseBytes = $bench->getMemoryUsage(true);
+$wholeUseCase = $bench->getMemoryUsage();
+unset($wholeResult);
+
+printf("Memory Usage Comparison: \n");
+printf("Whole -> %s\n", $wholeUseCase);
+printf("Iterator -> %s\n", $iteratorUseCase);
+printf("Ratio: 1:%s (whole vs iterator) \n", ceil($iteratorUseCaseBytes / $wholeUseCaseBytes * 100));

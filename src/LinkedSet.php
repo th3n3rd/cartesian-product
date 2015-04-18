@@ -66,27 +66,9 @@ class LinkedSet extends Set
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function key()
-    {
-        return parent::key();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function valid()
-    {
-        return parent::valid();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function rewind()
     {
+        $this->neighbour->rewind();
         parent::rewind();
     }
 }

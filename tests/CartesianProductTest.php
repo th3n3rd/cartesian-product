@@ -20,10 +20,20 @@ use PHPUnit_Framework_TestCase;
  */
 class CartesianProductTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var CartesianProduct
+     */
+    private $cartesianProduct;
+
     private static $sets = array(
         array('a', 'b'),
         array('c', 'd')
     );
+
+    public function setUp()
+    {
+        $this->cartesianProduct = new CartesianProduct(self::$sets);
+    }
 
     public function shouldBeAbleToHandleASingleSet()
     {
@@ -38,10 +48,8 @@ class CartesianProductTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldComputeTheCartesianProductCorrectly()
+    public function shouldComputeTheCartesianProductIterativelyAndAsWholeCorrectly()
     {
-        $cartesianProduct = new CartesianProduct(self::$sets);
-
         $expectedProduct = array(
             array('a', 'c'),
             array('a', 'd'),
@@ -51,15 +59,53 @@ class CartesianProductTest extends PHPUnit_Framework_TestCase
 
         // using the iterator interface
         $actualProductIteratively = array();
-        foreach ($cartesianProduct as $product) {
+        foreach ($this->cartesianProduct as $product) {
             $actualProductIteratively[] = $product;
         }
 
         // using the compute method
-        $actualProductAsWhole = $cartesianProduct->compute();
+        $actualProductAsWhole = $this->cartesianProduct->compute();
 
         $this->assertEquals($actualProductAsWhole, $actualProductIteratively);
         $this->assertEquals($expectedProduct, $actualProductIteratively);
         $this->assertEquals($expectedProduct, $actualProductAsWhole);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldBeAbleToComputeTheCurrentElement()
+    {
+        $this->assertEquals(array('a', 'c'), $this->cartesianProduct->current());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldAllowToMoveAndTrackTheCursor()
+    {
+        $this->assertEquals(0, $this->cartesianProduct->key());
+        $this->cartesianProduct->next();
+        $this->assertEquals(1, $this->cartesianProduct->key());
+        $this->cartesianProduct->next();
+        $this->assertEquals(2, $this->cartesianProduct->key());
+        $this->cartesianProduct->rewind();
+        $this->assertEquals(0, $this->cartesianProduct->key());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldDetectAnInvalidCursor()
+    {
+        $this->assertTrue($this->cartesianProduct->valid());
+        $this->cartesianProduct->next();
+        $this->assertTrue($this->cartesianProduct->valid());
+        $this->cartesianProduct->next();
+        $this->assertTrue($this->cartesianProduct->valid());
+        $this->cartesianProduct->next();
+        $this->assertTrue($this->cartesianProduct->valid());
+        $this->cartesianProduct->next();
+        $this->assertFalse($this->cartesianProduct->valid());
     }
 }
