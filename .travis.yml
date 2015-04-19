@@ -9,6 +9,7 @@ php:
   - hhvm
 
 before_script:
+  - composer selfupdate
   - composer install --dev
 
 script:
