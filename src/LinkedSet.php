@@ -66,6 +66,9 @@ class LinkedSet extends Set
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function rewind()
     {
         $this->neighbour->rewind();
