@@ -1,6 +1,7 @@
 <?php
+
 /**
- * This file is part of Cartesian Product.
+ * This file is part of the Cartesian Product package.
  *
  * (c) Marco Garofalo <marcogarofalo.personal@gmail.com>
  *
@@ -10,73 +11,89 @@
 
 namespace Nerd\CartesianProduct;
 
-use Iterator;
-
 /**
- * Class CartesianProduct.
- *
- * @package   Nerd\CartesianProduct
- * @author    Marco Garofalo <marcogarofalo.personal@gmail.com>
+ * @author Marco Garofalo <marcogarofalo.personal@gmail.com>
  */
-class CartesianProduct implements Iterator
+class CartesianProduct implements \Iterator
 {
     /**
      * @var array
      */
-    private $sets;
+    private $sets = array();
 
     /**
-     * @var Set
+     * @var \Iterator
      */
     private $referenceSet;
 
     /**
-     * @var int
+     * @var integer
      */
-    private $cursor;
+    private $cursor = 0;
 
     /**
-     * Constructor.
-     *
      * @param array $sets
      */
     public function __construct(array $sets = array())
     {
-        $this->cursor = 0;
-        $this->sets = array();
         foreach ($sets as $set) {
-            $this->appendSet($set);
+            $this->addSet($set);
         }
+
+        $this->computeReferenceSet();
+    }
+
+    /**
+     * Adds a set.
+     *
+     * @param array|Traversable $set
+     *
+     * @throws \InvalidArgumentException
+     */
+    private function addSet($set)
+    {
+        if (is_array($set)) {
+            $set = new \ArrayIterator($set);
+        } elseif ($set instanceof \Traversable) {
+            $set = new \IteratorIterator($set);
+        } else {
+            throw new \InvalidArgumentException('Set must be either an array or Traversable');
+        }
+
+        $this->sets[] = $set;
     }
 
     /**
      * Appends the given set.
      *
-     * @param array $set
+     * @param array|Traversable $set
      *
      * @return $this
+     *
+     * @throws \InvalidArgumentException
      */
-    public function appendSet(array $set)
+    public function appendSet($set)
     {
-        $this->sets[] = $set;
+        $this->addSet($set);
         $this->computeReferenceSet();
+
         return $this;
     }
 
     /**
      * Computes the reference set used for iterate over the product.
-     *
-     * @return void
      */
     private function computeReferenceSet()
     {
         if (empty($this->sets)) {
             return;
         }
+
         $sets = array_reverse($this->sets);
-        $this->referenceSet = new Set(array_shift($sets));
+        $this->referenceSet = array_shift($sets);
+
         foreach ($sets as $set) {
-            $this->referenceSet = new LinkedSet($this->referenceSet, $set);
+            $this->referenceSet = new Set($set, $this->referenceSet);
         }
     }
 

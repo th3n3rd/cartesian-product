@@ -1,8 +1,7 @@
 {
     "name": "th3n3rd/cartesian-product",
-    "type": "library",
     "description": "Memory efficient Cartesian Product implementation",
-    "keywords": [],
+    "keywords": ["cartesian", "product"],
     "license": "MIT",
     "authors": [
         {
@@ -14,18 +13,17 @@
         "php": ">=5.3.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.3.*",
-        "devster/ubench": "1.1.1"
+        "devster/ubench": "~1.1",
+        "phpunit/phpunit": "~4.4"
     },
     "autoload": {
         "psr-4": {
             "Nerd\\CartesianProduct\\": "src"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Nerd\\CartesianProduct\\": "tests"
-         }
-    },
-    "minimum-stability": "stable"
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.2-dev"
+        }
+    }
 }

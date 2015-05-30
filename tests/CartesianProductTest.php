@@ -1,6 +1,7 @@
 <?php
+
 /**
- * This file is part of Cartesian Product.
+ * This file is part of the Cartesian Product package.
  *
  * (c) Marco Garofalo <marcogarofalo.personal@gmail.com>
  *
@@ -10,21 +11,19 @@
 
 namespace Nerd\CartesianProduct;
 
-use PHPUnit_Framework_TestCase;
-
 /**
- * Class CartesianProductTest.
- *
- * @package   Nerd\CartesianProduct
- * @author    Marco Garofalo <marcogarofalo.personal@gmail.com>
+ * @author Marco Garofalo <marcogarofalo.personal@gmail.com>
  */
-class CartesianProductTest extends PHPUnit_Framework_TestCase
+class CartesianProductTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var CartesianProduct
      */
     private $cartesianProduct;
 
+    /**
+     * @var array
+     */
     private static $sets = array(
         array('a', 'b'),
         array('c', 'd')

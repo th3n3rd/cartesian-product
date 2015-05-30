@@ -1,6 +1,7 @@
 <?php
+
 /**
- * This file is part of Cartesian Product.
+ * This file is part of the Cartesian Product package.
  *
  * (c) Marco Garofalo <marcogarofalo.personal@gmail.com>
  *
@@ -10,61 +11,106 @@
 
 namespace Nerd\CartesianProduct;
 
-use PHPUnit_Framework_TestCase;
-
 /**
- * Class SetTest.
- *
- * @package   Nerd\CartesianProduct
- * @author    Marco Garofalo <marcogarofalo.personal@gmail.com>
+ * @author Marco Garofalo <marcogarofalo.personal@gmail.com>
  */
-class SetTest extends PHPUnit_Framework_TestCase
+class SetTest extends \PHPUnit_Framework_TestCase
 {
-    private static $values = array('a', 'b', 'c');
-
     /**
-     * @var Set
+     * @var array
      */
-    private $set;
+    private static $values = array('a', 'b');
 
-    public function setUp()
+    public function testShouldComputeTheCurrentElementForBothArrayAndNonArrayValues()
     {
-        $this->set = new Set(self::$values);
+        $neighbour = $this->getNeighbour();
+        $nonArrayValue = 'test';
+        $neighbour->expects($this->exactly(2))
+            ->method('current')
+            ->will($this->returnValue($nonArrayValue));
+
+        $set = new Set(new \ArrayIterator(self::$values), $neighbour);
+        $this->assertEquals(array('a', 'test'), $set->current());
+        $set->next();
+        $this->assertEquals(array('b', 'test'), $set->current());
+
+
+        $neighbour = $this->getNeighbour();
+        $arrayValue = array('test');
+        $neighbour->expects($this->exactly(2))
+            ->method('current')
+            ->will($this->returnValue($arrayValue));
+
+        $set = new Set(new \ArrayIterator(self::$values), $neighbour);
+        $this->assertEquals(array('a', 'test'), $set->current());
+        $set->next();
+        $this->assertEquals(array('b', 'test'), $set->current());
     }
 
-    /**
-     * @test
-     */
-    public function shouldBeAbleToComputeTheCurrentElement()
+    public function testShouldMoveToTheCursorToNextElementOnlyWhenNeighbourIsInvalid()
     {
-        $this->assertEquals('a', $this->set->current());
+        $neighbour = $this->getNeighbour();
+        $neighbour->expects($this->at(0))
+            ->method('next');
+        $neighbour->expects($this->at(1))
+            ->method('valid')
+            ->will($this->returnValue(false));
+        $neighbour->expects($this->at(2))
+            ->method('rewind');
+
+        $set = new Set(new \ArrayIterator(self::$values), $neighbour);
+        $this->assertEquals(0, $set->key());
+        $set->next();
+        $this->assertEquals(1, $set->key());
+
+        $neighbour = $this->getNeighbour();
+        $neighbour->expects($this->at(0))
+            ->method('next');
+        $neighbour->expects($this->at(1))
+            ->method('valid')
+            ->will($this->returnValue(true));
+
+        $set = new Set(new \ArrayIterator(self::$values), $neighbour);
+        $this->assertEquals(0, $set->key());
+        $set->next();
+        $this->assertEquals(0, $set->key());
     }
 
-    /**
-     * @test
-     */
-    public function shouldAllowToMoveAndTrackTheCursor()
+
+    public function testShouldAllowToMoveAndTrackTheCursor()
     {
-        $this->assertEquals(0, $this->set->key());
-        $this->set->next();
-        $this->assertEquals(1, $this->set->key());
-        $this->set->next();
-        $this->assertEquals(2, $this->set->key());
-        $this->set->rewind();
-        $this->assertEquals(0, $this->set->key());
+        $neighbour = $this->getNeighbour();
+
+        $neighbour->expects($this->exactly(1))
+            ->method('valid')
+            ->will($this->returnValue(false));
+
+        $neighbour->expects($this->exactly(2))
+            ->method('rewind');
+
+        $set = new Set(new \ArrayIterator(self::$values), $neighbour);
+        $this->assertEquals(0, $set->key());
+        $set->next();
+        $this->assertEquals(1, $set->key());
+        $set->rewind();
+        $this->assertEquals(0, $set->key());
     }
 
-    /**
-     * @test
-     */
-    public function shouldDetectAnInvalidCursor()
+    public function testShouldDetectAnInvalidCursor()
     {
-        $this->assertTrue($this->set->valid());
-        $this->set->next();
-        $this->assertTrue($this->set->valid());
-        $this->set->next();
-        $this->assertTrue($this->set->valid());
-        $this->set->next();
-        $this->assertFalse($this->set->valid());
+        $neighbour = $this->getNeighbour();
+        $set = new Set(new \ArrayIterator(self::$values), $neighbour);
+        $this->assertTrue($set->valid());
+        $set->next();
+        $this->assertTrue($set->valid());
+        $set->next();
+        $this->assertFalse($set->valid());
+    }
+
+    private function getNeighbour()
+    {
+        return $this->getMockBuilder('Iterator')
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 }

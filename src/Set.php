@@ -1,6 +1,7 @@
 <?php
+
 /**
- * This file is part of Cartesian Product.
+ * This file is part of the Cartesian Product package.
  *
  * (c) Marco Garofalo <marcogarofalo.personal@gmail.com>
  *
@@ -10,36 +11,26 @@
 
 namespace Nerd\CartesianProduct;
 
-use Countable;
-use Iterator;
-
 /**
- * Class Set.
- *
- * @package   Nerd\CartesianProduct
- * @author    Marco Garofalo <marcogarofalo.personal@gmail.com>
+ * @author Marco Garofalo <marcogarofalo.personal@gmail.com>
  */
-class Set implements Iterator, Countable
+class Set extends \IteratorIterator
 {
     /**
-     * @var array
+     * @var \Iterator
      */
-    protected $values;
+    private $neighbour;
 
     /**
-     * @var int
+     * @param \Iterator $set
+     * @param \Iterator $neighbour
      */
-    protected $cursor;
-
-    /**
-     * Constructor.
-     *
-     * @param array $values
-     */
-    public function __construct(array $values = array())
+    public function __construct(\Iterator $set, \Iterator $neighbour)
     {
-        $this->cursor = 0;
-        $this->values = array_unique($values);
+        $this->neighbour = $neighbour;
+
+        parent::__construct($set);
+        parent::rewind();
     }
 
     /**
@@ -47,7 +38,18 @@ class Set implements Iterator, Countable
      */
     public function current()
     {
-        return $this->values[$this->cursor];
+        $neighbourCurrent = $this->neighbour->current();
+        $current = parent::current();
+
+        if (!is_array($neighbourCurrent)) {
+            $neighbourCurrent = array($neighbourCurrent);
+        }
+
+        if (!is_array($current)) {
+            $current = array($current);
+        }
+
+        return array_merge($current, $neighbourCurrent);
     }
 
     /**
@@ -55,23 +57,12 @@ class Set implements Iterator, Countable
      */
     public function next()
     {
-        $this->cursor++;
-    }
+        $this->neighbour->next();
 
-    /**
-     * {@inheritdoc}
-     */
-    public function key()
-    {
-        return $this->cursor;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function valid()
-    {
-        return isset($this->values[$this->cursor]);
+        if (!$this->neighbour->valid()) {
+            $this->neighbour->rewind();
+            parent::next();
+        }
     }
 
     /**
@@ -79,14 +70,7 @@ class Set implements Iterator, Countable
      */
     public function rewind()
     {
-        $this->cursor = 0;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function count()
-    {
-        return count($this->values);
+        $this->neighbour->rewind();
+        parent::rewind();
     }
 }

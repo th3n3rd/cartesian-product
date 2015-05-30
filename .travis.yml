@@ -8,9 +8,18 @@ php:
   - 7.0
   - hhvm
 
-before_script:
-  - composer selfupdate
-  - composer install --dev
+matrix:
+  allow_failures:
+    - php: 7.0
+  include:
+    - php: 5.3
+      env:
+        - COMPOSER_FLAGS="--prefer-stable --prefer-lowest"
+        - PHPUNIT_FLAGS="-c phpunit.xml.ci"
+        - COVERAGE=true
 
-script:
-  - phpunit
+install:
+  - travis_retry composer self-update
+  - travis_retry composer update ${COMPOSER_FLAGS} --prefer-source --no-interaction
+
+script: vendor/bin/phpunit ${PHPUNIT_FLAGS}
