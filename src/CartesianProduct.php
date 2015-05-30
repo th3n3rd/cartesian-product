@@ -57,7 +57,7 @@ class CartesianProduct implements \Iterator
         } elseif ($set instanceof \Traversable) {
             $set = new \IteratorIterator($set);
         } else {
-            throw new \InvalidArgumentException("Error Processing Request", 1);
+            throw new \InvalidArgumentException('Set must be either an array or Traversable');
         }
 
         $this->sets[] = $set;
