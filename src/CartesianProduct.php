@@ -22,7 +22,7 @@ class CartesianProduct implements \Iterator
     private $sets = array();
 
     /**
-     * @var Set
+     * @var \Iterator
      */
     private $referenceSet;
 
