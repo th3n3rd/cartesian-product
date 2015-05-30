@@ -34,7 +34,7 @@ class CartesianProductTest extends \PHPUnit_Framework_TestCase
         $this->cartesianProduct = new CartesianProduct(self::$sets);
     }
 
-    public function shouldBeAbleToHandleASingleSet()
+    public function testShouldBeAbleToHandleASingleSet()
     {
         $singleSet = array(array('a', 'b'));
         $cartesianProduct = new CartesianProduct($singleSet);
@@ -44,10 +44,7 @@ class CartesianProductTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($cartesianProduct->current()));
     }
 
-    /**
-     * @test
-     */
-    public function shouldComputeTheCartesianProductIterativelyAndAsWholeCorrectly()
+    public function testShouldComputeTheCartesianProductIterativelyAndAsWholeCorrectly()
     {
         $expectedProduct = array(
             array('a', 'c'),
@@ -70,18 +67,12 @@ class CartesianProductTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedProduct, $actualProductAsWhole);
     }
 
-    /**
-     * @test
-     */
-    public function shouldBeAbleToComputeTheCurrentElement()
+    public function testShouldBeAbleToComputeTheCurrentElement()
     {
         $this->assertEquals(array('a', 'c'), $this->cartesianProduct->current());
     }
 
-    /**
-     * @test
-     */
-    public function shouldAllowToMoveAndTrackTheCursor()
+    public function testShouldAllowToMoveAndTrackTheCursor()
     {
         $this->assertEquals(0, $this->cartesianProduct->key());
         $this->cartesianProduct->next();
@@ -92,10 +83,7 @@ class CartesianProductTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $this->cartesianProduct->key());
     }
 
-    /**
-     * @test
-     */
-    public function shouldDetectAnInvalidCursor()
+    public function testShouldDetectAnInvalidCursor()
     {
         $this->assertTrue($this->cartesianProduct->valid());
         $this->cartesianProduct->next();

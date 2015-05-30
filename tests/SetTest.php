@@ -42,9 +42,9 @@ class SetTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($arrayValue));
 
         $set = new Set(new \ArrayIterator(self::$values), $neighbour);
-        $this->assertEquals(array('a', 'test'), $set->current());
+        $this->assertEquals(array('a', $arrayValue), $set->current());
         $set->next();
-        $this->assertEquals(array('b', 'test'), $set->current());
+        $this->assertEquals(array('b', $arrayValue), $set->current());
     }
 
     public function testShouldMoveToTheCursorToNextElementOnlyWhenNeighbourIsInvalid()
