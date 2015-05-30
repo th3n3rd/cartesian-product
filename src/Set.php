@@ -41,15 +41,13 @@ class Set extends \IteratorIterator
         $neighbourCurrent = $this->neighbour->current();
         $current = parent::current();
 
-        if (!is_array($neighbourCurrent)) {
+        if (!$this->neighbour instanceof Set) {
             $neighbourCurrent = array($neighbourCurrent);
         }
 
-        if (!is_array($current)) {
-            $current = array($current);
-        }
+        array_unshift($neighbourCurrent, $current);
 
-        return array_merge($current, $neighbourCurrent);
+        return $neighbourCurrent;
     }
 
     /**
