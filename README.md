@@ -1,6 +1,7 @@
 # Cartesian Product
 
 [![Latest Version](https://img.shields.io/github/release/th3n3rd/cartesian-product.svg?style=flat-square)](https://github.com/th3n3rd/cartesian-product/releases)
+[![Build Status](https://github.com/th3n3rd/cartesian-product/actions/workflows/ci.yml/badge.svg)](https://github.com/th3n3rd/cartesian-product/actions/workflows/ci.yml)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Total Downloads](https://img.shields.io/packagist/dt/th3n3rd/cartesian-product.svg?style=flat-square)](https://packagist.org/packages/th3n3rd/cartesian-product)
 
