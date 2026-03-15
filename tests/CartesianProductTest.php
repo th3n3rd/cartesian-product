@@ -26,17 +26,26 @@ class CartesianProductTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->cartesianProduct = new CartesianProduct(self::$sets);
+        $this->cartesianProduct = CartesianProduct::of(self::$sets);
     }
 
     public function testShouldBeAbleToHandleASingleSet()
     {
         $singleSet = [['a', 'b']];
-        $cartesianProduct = new CartesianProduct($singleSet);
+        $cartesianProduct = CartesianProduct::of($singleSet);
 
         $this->assertIsArray($cartesianProduct->current());
         $cartesianProduct->next();
         $this->assertIsArray($cartesianProduct->current());
+    }
+
+    public function testShouldBeAbleToCreateAnEmptyProduct()
+    {
+        $cartesianProduct = CartesianProduct::empty();
+
+        $this->assertFalse($cartesianProduct->valid());
+        $this->assertEquals([], $cartesianProduct->compute());
+        $this->assertEquals([], $cartesianProduct->current());
     }
 
     public function testShouldComputeTheCartesianProductIterativelyAndAsWholeCorrectly()

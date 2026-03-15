@@ -25,12 +25,23 @@ The library can be used as an iterator:
 ```php
 use Nerd\CartesianProduct\CartesianProduct;
 
-$cartesianProduct = new CartesianProduct();
+$cartesianProduct = CartesianProduct::empty();
 
 $cartesianProduct
     ->appendSet(['a', 'b', 'c'])
     ->appendSet(['d', 'e'])
 ;
+```
+
+Or you can use the `of` static method:
+
+```php
+use Nerd\CartesianProduct\CartesianProduct;
+
+$cartesianProduct = CartesianProduct::of([
+    ['a', 'b', 'c'],
+    ['d', 'e'],
+]);
 
 foreach ($cartesianProduct as $index => $product) {
     printf("[%s] (%s)\n", $index, implode(',', $product));

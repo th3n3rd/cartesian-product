@@ -28,15 +28,12 @@ class Set extends IteratorIterator
         parent::rewind();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function current(): mixed
     {
         $neighbourCurrent = $this->neighbour->current();
         $current = parent::current();
 
-        if (!$this->neighbour instanceof Set) {
+        if (!$this->neighbour instanceof self) {
             $neighbourCurrent = [$neighbourCurrent];
         }
 
@@ -45,9 +42,6 @@ class Set extends IteratorIterator
         return $neighbourCurrent;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function next(): void
     {
         $this->neighbour->next();
@@ -58,9 +52,6 @@ class Set extends IteratorIterator
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rewind(): void
     {
         $this->neighbour->rewind();

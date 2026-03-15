@@ -14,7 +14,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $bench = new Ubench();
 
-$cartesianProduct = new CartesianProduct();
+$cartesianProduct = CartesianProduct::empty();
 
 $cartesianProduct
     ->appendSet(['a', 'b', 'c'])
