@@ -10,20 +10,25 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=8.0"
     },
     "require-dev": {
-        "devster/ubench": "~1.1",
-        "phpunit/phpunit": "~4.4"
+        "devster/ubench": "^1.1",
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
             "Nerd\\CartesianProduct\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Nerd\\CartesianProduct\\": "tests"
+        }
+    },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.4-dev"
+            "dev-master": "1.0-dev"
         }
     }
 }

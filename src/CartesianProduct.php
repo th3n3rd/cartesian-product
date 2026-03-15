@@ -11,30 +11,19 @@
 
 namespace Nerd\CartesianProduct;
 
+use InvalidArgumentException;
+use Iterator;
+
 /**
  * @author Marco Garofalo <marcogarofalo.personal@gmail.com>
  */
-class CartesianProduct implements \Iterator
+class CartesianProduct implements Iterator
 {
-    /**
-     * @var array
-     */
-    private $sets = array();
+    private int $cursor = 0;
+    private array $sets = [];
+    private Iterator $referenceSet;
 
-    /**
-     * @var \Iterator
-     */
-    private $referenceSet;
-
-    /**
-     * @var integer
-     */
-    private $cursor = 0;
-
-    /**
-     * @param array $sets
-     */
-    public function __construct(array $sets = array())
+    public function __construct(iterable $sets = [])
     {
         foreach ($sets as $set) {
             $this->addSet($set);
@@ -46,18 +35,18 @@ class CartesianProduct implements \Iterator
     /**
      * Adds a set.
      *
-     * @param array|Traversable $set
+     * @param iterable $set
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    private function addSet($set)
+    private function addSet(iterable $set): void
     {
         if (is_array($set)) {
             $set = new \ArrayIterator($set);
         } elseif ($set instanceof \Traversable) {
             $set = new \IteratorIterator($set);
         } else {
-            throw new \InvalidArgumentException('Set must be either an array or Traversable');
+            throw new InvalidArgumentException('Set must be either an array or Traversable');
         }
 
         $this->sets[] = $set;
@@ -66,13 +55,13 @@ class CartesianProduct implements \Iterator
     /**
      * Appends the given set.
      *
-     * @param array|Traversable $set
+     * @param iterable $set
      *
      * @return $this
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function appendSet($set)
+    public function appendSet(iterable $set): self
     {
         $this->addSet($set);
         $this->computeReferenceSet();
@@ -83,7 +72,7 @@ class CartesianProduct implements \Iterator
     /**
      * Computes the reference set used for iterate over the product.
      */
-    private function computeReferenceSet()
+    private function computeReferenceSet(): void
     {
         if (empty($this->sets)) {
             return;
@@ -100,17 +89,17 @@ class CartesianProduct implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function current()
+    public function current(): array
     {
         $current = $this->referenceSet->current();
 
-        return !is_array($current) ? array($current) : $current;
+        return !is_array($current) ? [$current] : $current;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function next()
+    public function next(): void
     {
         $this->cursor++;
         $this->referenceSet->next();
@@ -119,7 +108,7 @@ class CartesianProduct implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function key()
+    public function key(): int
     {
         return $this->cursor;
     }
@@ -127,7 +116,7 @@ class CartesianProduct implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->referenceSet->valid();
     }
@@ -135,7 +124,7 @@ class CartesianProduct implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->cursor = 0;
         $this->referenceSet->rewind();
@@ -149,9 +138,9 @@ class CartesianProduct implements \Iterator
      * The recommended way to use the Cartesian Product is through its iterator interface
      * which is memory efficient.
      */
-    public function compute()
+    public function compute(): array
     {
-        $product = array();
+        $product = [];
 
         $this->referenceSet->rewind();
 

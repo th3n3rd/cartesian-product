@@ -17,18 +17,18 @@ $bench = new Ubench();
 $cartesianProduct = new CartesianProduct();
 
 $cartesianProduct
-    ->appendSet(array('a', 'b', 'c'))
-    ->appendSet(array('d', 'e'))
-    ->appendSet(array('f', 'g', 'h'))
-    ->appendSet(array('i', 'j'))
-    ->appendSet(array('k', 'l'))
-    ->appendSet(array('m', 'n'))
-    ->appendSet(array('o'))
-    ->appendSet(array('p'))
-    ->appendSet(array('q', 'r', 's', 't'))
-    ->appendSet(array('u', 'v', 'w'))
-    ->appendSet(array('x', 'y'))
-    ->appendSet(array('z'))
+    ->appendSet(['a', 'b', 'c'])
+    ->appendSet(['d', 'e'])
+    ->appendSet(['f', 'g', 'h'])
+    ->appendSet(['i', 'j'])
+    ->appendSet(['k', 'l'])
+    ->appendSet(['m', 'n'])
+    ->appendSet(['o'])
+    ->appendSet(['p'])
+    ->appendSet(['q', 'r', 's', 't'])
+    ->appendSet(['u', 'v', 'w'])
+    ->appendSet(['x', 'y'])
+    ->appendSet(['z'])
 ;
 
 $bench->start();

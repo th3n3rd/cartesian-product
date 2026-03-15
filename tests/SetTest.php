@@ -14,7 +14,9 @@ namespace Nerd\CartesianProduct;
 /**
  * @author Marco Garofalo <marcogarofalo.personal@gmail.com>
  */
-class SetTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class SetTest extends TestCase
 {
     /**
      * @var array
@@ -27,35 +29,35 @@ class SetTest extends \PHPUnit_Framework_TestCase
         $nonArrayValue = 'test';
         $neighbour->expects($this->exactly(2))
             ->method('current')
-            ->will($this->returnValue($nonArrayValue));
+            ->willReturn($nonArrayValue);
 
         $set = new Set(new \ArrayIterator(self::$values), $neighbour);
-        $this->assertEquals(array('a', 'test'), $set->current());
+        $this->assertEquals(['a', 'test'], $set->current());
         $set->next();
-        $this->assertEquals(array('b', 'test'), $set->current());
+        $this->assertEquals(['b', 'test'], $set->current());
 
 
         $neighbour = $this->getNeighbour();
-        $arrayValue = array('test');
+        $arrayValue = ['test'];
         $neighbour->expects($this->exactly(2))
             ->method('current')
-            ->will($this->returnValue($arrayValue));
+            ->willReturn($arrayValue);
 
         $set = new Set(new \ArrayIterator(self::$values), $neighbour);
-        $this->assertEquals(array('a', $arrayValue), $set->current());
+        $this->assertEquals(['a', $arrayValue], $set->current());
         $set->next();
-        $this->assertEquals(array('b', $arrayValue), $set->current());
+        $this->assertEquals(['b', $arrayValue], $set->current());
     }
 
     public function testShouldMoveToTheCursorToNextElementOnlyWhenNeighbourIsInvalid()
     {
         $neighbour = $this->getNeighbour();
-        $neighbour->expects($this->at(0))
+        $neighbour->expects($this->once())
             ->method('next');
-        $neighbour->expects($this->at(1))
+        $neighbour->expects($this->once())
             ->method('valid')
-            ->will($this->returnValue(false));
-        $neighbour->expects($this->at(2))
+            ->willReturn(false);
+        $neighbour->expects($this->once())
             ->method('rewind');
 
         $set = new Set(new \ArrayIterator(self::$values), $neighbour);
@@ -64,11 +66,11 @@ class SetTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $set->key());
 
         $neighbour = $this->getNeighbour();
-        $neighbour->expects($this->at(0))
+        $neighbour->expects($this->once())
             ->method('next');
-        $neighbour->expects($this->at(1))
+        $neighbour->expects($this->once())
             ->method('valid')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $set = new Set(new \ArrayIterator(self::$values), $neighbour);
         $this->assertEquals(0, $set->key());
@@ -83,7 +85,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
 
         $neighbour->expects($this->exactly(1))
             ->method('valid')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $neighbour->expects($this->exactly(2))
             ->method('rewind');
