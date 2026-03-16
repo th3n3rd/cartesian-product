@@ -18,38 +18,31 @@ use PHPUnit\Framework\TestCase;
  */
 class CartesianProductTest extends TestCase
 {
-    private static array $sets = [
-        ['a', 'b'],
-        ['c', 'd']
-    ];
-    private CartesianProduct $cartesianProduct;
-
-    protected function setUp(): void
+    public function testShouldBeAbleToHandleAnEmptyProduct()
     {
-        $this->cartesianProduct = CartesianProduct::of(self::$sets);
+        $cartesianProduct = CartesianProduct::empty();
+
+        $this->assertEquals([], $this->computeIteratively($cartesianProduct));
+        $this->assertEquals([], $cartesianProduct->compute());
     }
 
     public function testShouldBeAbleToHandleASingleSet()
     {
-        $singleSet = [['a', 'b']];
-        $cartesianProduct = CartesianProduct::of($singleSet);
+        $cartesianProduct = CartesianProduct::empty()->appendSet(['a', 'b']);
+        $expectedProduct = [
+            ['a'],
+            ['b'],
+        ];
 
-        $this->assertIsArray($cartesianProduct->current());
-        $cartesianProduct->next();
-        $this->assertIsArray($cartesianProduct->current());
+        $this->assertEquals($expectedProduct, $this->computeIteratively($cartesianProduct));
+        $this->assertEquals($expectedProduct, $cartesianProduct->compute());
     }
 
-    public function testShouldBeAbleToCreateAnEmptyProduct()
+    public function testShouldBeAbleToHandleMultipleSets()
     {
-        $cartesianProduct = CartesianProduct::empty();
-
-        $this->assertFalse($cartesianProduct->valid());
-        $this->assertEquals([], $cartesianProduct->compute());
-        $this->assertEquals([], $cartesianProduct->current());
-    }
-
-    public function testShouldComputeTheCartesianProductIterativelyAndAsWholeCorrectly()
-    {
+        $cartesianProduct = CartesianProduct::empty()
+            ->appendSet(['a', 'b'])
+            ->appendSet(['c', 'd']);
         $expectedProduct = [
             ['a', 'c'],
             ['a', 'd'],
@@ -57,46 +50,49 @@ class CartesianProductTest extends TestCase
             ['b', 'd'],
         ];
 
-        // using the iterator interface
-        $actualProductIteratively = [];
-        foreach ($this->cartesianProduct as $product) {
-            $actualProductIteratively[] = $product;
-        }
-
-        // using the compute method
-        $actualProductAsWhole = $this->cartesianProduct->compute();
-
-        $this->assertEquals($actualProductAsWhole, $actualProductIteratively);
-        $this->assertEquals($expectedProduct, $actualProductIteratively);
-        $this->assertEquals($expectedProduct, $actualProductAsWhole);
-    }
-
-    public function testShouldBeAbleToComputeTheCurrentElement()
-    {
-        $this->assertEquals(['a', 'c'], $this->cartesianProduct->current());
+        $this->assertEquals($expectedProduct, $this->computeIteratively($cartesianProduct));
+        $this->assertEquals($expectedProduct, $cartesianProduct->compute());
     }
 
     public function testShouldAllowToMoveAndTrackTheCursor()
     {
-        $this->assertEquals(0, $this->cartesianProduct->key());
-        $this->cartesianProduct->next();
-        $this->assertEquals(1, $this->cartesianProduct->key());
-        $this->cartesianProduct->next();
-        $this->assertEquals(2, $this->cartesianProduct->key());
-        $this->cartesianProduct->rewind();
-        $this->assertEquals(0, $this->cartesianProduct->key());
+        $cartesianProduct = CartesianProduct::empty();
+
+        $this->assertEquals(0, $cartesianProduct->key());
+
+        $cartesianProduct->next();
+        $this->assertEquals(1, $cartesianProduct->key());
+
+        $cartesianProduct->next();
+        $this->assertEquals(2, $cartesianProduct->key());
+
+        $cartesianProduct->next();
+        $this->assertEquals(3, $cartesianProduct->key());
+
+        $cartesianProduct->rewind();
+        $this->assertEquals(0, $cartesianProduct->key());
     }
 
-    public function testShouldDetectAnInvalidCursor()
+    public function testShouldDetectAnInvalidCursor() {
+        $emptyProduct = CartesianProduct::empty();
+        $oneSetProduct = CartesianProduct::empty()->appendSet(['a']);
+
+        $this->assertFalse($emptyProduct->valid());
+        $this->assertTrue($oneSetProduct->valid());
+
+        $emptyProduct->next();
+        $oneSetProduct->next();
+        $this->assertFalse($emptyProduct->valid());
+        $this->assertFalse($emptyProduct->valid());
+    }
+
+
+    private function computeIteratively(CartesianProduct $cartesianProduct): array
     {
-        $this->assertTrue($this->cartesianProduct->valid());
-        $this->cartesianProduct->next();
-        $this->assertTrue($this->cartesianProduct->valid());
-        $this->cartesianProduct->next();
-        $this->assertTrue($this->cartesianProduct->valid());
-        $this->cartesianProduct->next();
-        $this->assertTrue($this->cartesianProduct->valid());
-        $this->cartesianProduct->next();
-        $this->assertFalse($this->cartesianProduct->valid());
+        $actual = [];
+        foreach ($cartesianProduct as $product) {
+            $actual[] = $product;
+        }
+        return $actual;
     }
 }
