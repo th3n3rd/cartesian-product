@@ -32,4 +32,10 @@ jobs:
       run: composer update ${{ matrix.composer-flags }} --prefer-dist --no-interaction
 
     - name: Run tests
-      run: vendor/bin/phpunit
+      run: vendor/bin/phpunit --configuration phpunit.xml.ci
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report-${{ matrix.php }}-${{ matrix.composer-flags }}
+        path: build/coverage.xml
