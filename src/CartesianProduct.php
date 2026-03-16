@@ -23,13 +23,9 @@ class CartesianProduct implements Iterator
     private array $sets = [];
     private Iterator $referenceSet;
 
-    private function __construct(iterable $sets = [])
+    private function __construct()
     {
-        foreach ($sets as $set) {
-            $this->addSet($set);
-        }
-
-        $this->computeReferenceSet();
+        $this->referenceSet = new \EmptyIterator();
     }
 
     /**
@@ -41,7 +37,11 @@ class CartesianProduct implements Iterator
      */
     public static function of(iterable $sets): self
     {
-        return new self($sets);
+        $product = self::empty();
+        foreach ($sets as $set) {
+            $product = $product->appendSet($set);
+        }
+        return $product;
     }
 
     /**
@@ -54,36 +54,17 @@ class CartesianProduct implements Iterator
         return new self();
     }
 
-    private function addSet(iterable $set): void
+    public function appendSet(iterable $set): self
     {
         $this->sets[] = match (true) {
             is_array($set) => new \ArrayIterator($set),
             $set instanceof \Traversable => new \IteratorIterator($set),
             default => throw new InvalidArgumentException('Set must be either an array or Traversable'),
         };
-    }
 
-    public function appendSet(iterable $set): self
-    {
-        $this->addSet($set);
         $this->computeReferenceSet();
 
         return $this;
-    }
-
-    private function computeReferenceSet(): void
-    {
-        if (empty($this->sets)) {
-            $this->referenceSet = new \EmptyIterator();
-            return;
-        }
-
-        $sets = array_reverse($this->sets);
-        $this->referenceSet = array_shift($sets);
-
-        foreach ($sets as $set) {
-            $this->referenceSet = new Set($set, $this->referenceSet);
-        }
     }
 
     public function current(): array
@@ -131,5 +112,15 @@ class CartesianProduct implements Iterator
         }
 
         return $product;
+    }
+
+    private function computeReferenceSet(): void
+    {
+        $sets = array_reverse($this->sets);
+        $this->referenceSet = array_shift($sets);
+
+        foreach ($sets as $set) {
+            $this->referenceSet = new Set($set, $this->referenceSet);
+        }
     }
 }
