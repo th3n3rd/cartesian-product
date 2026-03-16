@@ -29,13 +29,8 @@ $cartesianProduct = CartesianProduct::empty()
     ->with(['a', 'b', 'c'])
     ->with(['d', 'e'])
 ;
-```
 
-Or you can use the `of` static method:
-
-```php
-use Nerd\CartesianProduct\CartesianProduct;
-
+// or you can use the `of` static method:
 $cartesianProduct = CartesianProduct::of([
     ['a', 'b', 'c'],
     ['d', 'e'],
@@ -46,7 +41,7 @@ foreach ($cartesianProduct as $index => $product) {
 }
 ```
 
-Or you can compute the whole result at once (not recommended for large sets):
+You can also compute the whole result at once (not recommended for large sets):
 
 ```php
 $result = $cartesianProduct->toArray();
