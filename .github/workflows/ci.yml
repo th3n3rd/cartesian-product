@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        php: ['8.0', '8.1', '8.2', '8.3']
+        php: ['8.1', '8.2', '8.3']
         composer-flags: ['']
         include:
           - php: '8.0'
@@ -37,5 +37,5 @@ jobs:
     - name: Upload coverage report
       uses: actions/upload-artifact@v4
       with:
-        name: coverage-report-${{ matrix.php }}-${{ matrix.composer-flags }}
+        name: coverage-report-${{ matrix.php }}
         path: build/coverage.xml
