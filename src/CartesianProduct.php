@@ -39,7 +39,7 @@ class CartesianProduct implements Iterator
     {
         $product = self::empty();
         foreach ($sets as $set) {
-            $product = $product->appendSet($set);
+            $product = $product->with($set);
         }
         return $product;
     }
@@ -54,7 +54,7 @@ class CartesianProduct implements Iterator
         return new self();
     }
 
-    public function appendSet(iterable $set): self
+    public function with(iterable $set): self
     {
         $this->sets[] = match (true) {
             is_array($set) => new \ArrayIterator($set),
@@ -100,7 +100,7 @@ class CartesianProduct implements Iterator
         $this->referenceSet->rewind();
     }
 
-    public function compute(): array
+    public function toArray(): array
     {
         $product = [];
 

@@ -14,25 +14,23 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $bench = new Ubench();
 
-$cartesianProduct = CartesianProduct::empty();
-
-$cartesianProduct
-    ->appendSet(['a', 'b', 'c'])
-    ->appendSet(['d', 'e'])
-    ->appendSet(['f', 'g', 'h'])
-    ->appendSet(['i', 'j'])
-    ->appendSet(['k', 'l'])
-    ->appendSet(['m', 'n'])
-    ->appendSet(['o'])
-    ->appendSet(['p'])
-    ->appendSet(['q', 'r', 's', 't'])
-    ->appendSet(['u', 'v', 'w'])
-    ->appendSet(['x', 'y'])
-    ->appendSet(['z'])
+$cartesianProduct = CartesianProduct::empty()
+    ->with(['a', 'b', 'c'])
+    ->with(['d', 'e'])
+    ->with(['f', 'g', 'h'])
+    ->with(['i', 'j'])
+    ->with(['k', 'l'])
+    ->with(['m', 'n'])
+    ->with(['o'])
+    ->with(['p'])
+    ->with(['q', 'r', 's', 't'])
+    ->with(['u', 'v', 'w'])
+    ->with(['x', 'y'])
+    ->with(['z'])
 ;
 
 $bench->start();
-$wholeResult = $cartesianProduct->compute();
+$wholeResult = $cartesianProduct->toArray();
 foreach ($wholeResult as $index => $product) {
     printf("[%s] (%s)\n", $index, implode(',', $product));
 }

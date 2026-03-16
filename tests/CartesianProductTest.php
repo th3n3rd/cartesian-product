@@ -23,26 +23,26 @@ class CartesianProductTest extends TestCase
         $cartesianProduct = CartesianProduct::empty();
 
         $this->assertEquals([], $this->computeIteratively($cartesianProduct));
-        $this->assertEquals([], $cartesianProduct->compute());
+        $this->assertEquals([], $cartesianProduct->toArray());
     }
 
     public function testShouldBeAbleToHandleASingleSet()
     {
-        $cartesianProduct = CartesianProduct::empty()->appendSet(['a', 'b']);
+        $cartesianProduct = CartesianProduct::empty()->with(['a', 'b']);
         $expectedProduct = [
             ['a'],
             ['b'],
         ];
 
         $this->assertEquals($expectedProduct, $this->computeIteratively($cartesianProduct));
-        $this->assertEquals($expectedProduct, $cartesianProduct->compute());
+        $this->assertEquals($expectedProduct, $cartesianProduct->toArray());
     }
 
     public function testShouldBeAbleToHandleMultipleSets()
     {
         $cartesianProduct = CartesianProduct::empty()
-            ->appendSet(['a', 'b'])
-            ->appendSet(['c', 'd']);
+            ->with(['a', 'b'])
+            ->with(['c', 'd']);
         $expectedProduct = [
             ['a', 'c'],
             ['a', 'd'],
@@ -51,7 +51,7 @@ class CartesianProductTest extends TestCase
         ];
 
         $this->assertEquals($expectedProduct, $this->computeIteratively($cartesianProduct));
-        $this->assertEquals($expectedProduct, $cartesianProduct->compute());
+        $this->assertEquals($expectedProduct, $cartesianProduct->toArray());
     }
 
     public function testShouldAllowToMoveAndTrackTheCursor()
@@ -75,7 +75,7 @@ class CartesianProductTest extends TestCase
 
     public function testShouldDetectAnInvalidCursor() {
         $emptyProduct = CartesianProduct::empty();
-        $oneSetProduct = CartesianProduct::empty()->appendSet(['a']);
+        $oneSetProduct = CartesianProduct::empty()->with(['a']);
 
         $this->assertFalse($emptyProduct->valid());
         $this->assertTrue($oneSetProduct->valid());

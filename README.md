@@ -25,11 +25,9 @@ The library can be used as an iterator:
 ```php
 use Nerd\CartesianProduct\CartesianProduct;
 
-$cartesianProduct = CartesianProduct::empty();
-
-$cartesianProduct
-    ->appendSet(['a', 'b', 'c'])
-    ->appendSet(['d', 'e'])
+$cartesianProduct = CartesianProduct::empty()
+    ->with(['a', 'b', 'c'])
+    ->with(['d', 'e'])
 ;
 ```
 
@@ -51,7 +49,7 @@ foreach ($cartesianProduct as $index => $product) {
 Or you can compute the whole result at once (not recommended for large sets):
 
 ```php
-$result = $cartesianProduct->compute();
+$result = $cartesianProduct->toArray();
 ```
 
 
